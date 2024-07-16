@@ -1,5 +1,6 @@
-# Product Catelog
-A sample url shortener app to test Keploy integration capabilities
+# MUX-SQL
+
+This is a sample application that uses the `gorilla/mux` router and `Postgres` for database operations. The application is a simple product catalog that allows you to add products, fetch all products, and fetch a single product. 
 
 ## Installation Setup
 
