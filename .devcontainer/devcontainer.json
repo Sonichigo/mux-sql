@@ -4,5 +4,7 @@
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
 	},
-	"runArgs": ["--privileged", "--cap-add=ALL"]
+	"runArgs": ["--privileged", "--cap-add=ALL"],
+	"postCreateCommand": "bash .devcontainer/setup.sh",
+	"remoteUser": "root"
 }
