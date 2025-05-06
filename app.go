@@ -1,4 +1,3 @@
-// app.go
 package main
 
 import (
@@ -23,18 +22,18 @@ type App struct {
 	Server *http.Server
 }
 
-// tom: initial function is empty, it's filled afterwards
-// func (a *App) Initialize(user, password, dbname string) { }
-
-// tom: added "sslmode=disable" to connection string
 func (a *App) Initialize(host, user, password, dbname string) error {
-
 	connectionString := fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, "5432", user, password, dbname)
-	// connectionString := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", user, password, dbname)
 	var err error
 	a.DB, err = sql.Open("postgres", connectionString)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Verify database connection
+	err = a.DB.Ping()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -45,14 +44,10 @@ func (a *App) Initialize(host, user, password, dbname string) error {
 		Handler: a.Router,
 	}
 
-	// tom: this line is added after initializeRoutes is created later on
 	a.initializeRoutes()
 	return err
 }
 
-// tom: initial version
-// func (a *App) Run(addr string) { }
-// improved version
 func (a *App) Run(addr string) {
 	go func() {
 		if err := a.Server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -76,7 +71,6 @@ func (a *App) Run(addr string) {
 	log.Println("Server exiting")
 }
 
-// tom: these are added later
 func (a *App) getProduct(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -140,6 +134,11 @@ func (a *App) createProduct(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	if err := p.createProduct(r.Context(), a.DB); err != nil {
+		// Check for validation errors
+		if err.Error() == "product name is required" {
+			respondWithError(w, http.StatusBadRequest, err.Error())
+			return
+		}
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -158,13 +157,17 @@ func (a *App) updateProduct(w http.ResponseWriter, r *http.Request) {
 	var p product
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&p); err != nil {
-		respondWithError(w, http.StatusBadRequest, "Invalid resquest payload")
+		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 	defer r.Body.Close()
 	p.ID = id
 
 	if err := p.updateProduct(r.Context(), a.DB); err != nil {
+		if err.Error() == "product not found" {
+			respondWithError(w, http.StatusNotFound, err.Error())
+			return
+		}
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -182,6 +185,10 @@ func (a *App) deleteProduct(w http.ResponseWriter, r *http.Request) {
 
 	p := product{ID: id}
 	if err := p.deleteProduct(r.Context(), a.DB); err != nil {
+		if err.Error() == "product not found" {
+			respondWithError(w, http.StatusNotFound, err.Error())
+			return
+		}
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
