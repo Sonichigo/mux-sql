@@ -1,7 +1,4 @@
 databaseChangeLog:
-  - includeAll:
-      path: sql
-      relativeToChangelogFile: true
   - changeSet:
       id: product-table
       author: claude
