@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: product-table
-      author: claude
+      author: sonichigo
       labels: products-api 
       comment: Creating product table for REST API
       changes:
@@ -29,7 +29,7 @@ databaseChangeLog:
             tableName: products
   - changeSet:
       id: product-table-indexes
-      author: claude
+      author: sonichigo
       labels: products-api
       comment: Adding indexes for the products table
       changes:
@@ -55,10 +55,10 @@ databaseChangeLog:
             columns:
               - column:
                   name: name
-                  value: "Sample Product 1"
+                  value: "Sample Product 2"
               - column:
                   name: price
-                  value: 19.99
+                  value: 20
         - insert:
             tableName: products
             columns:
