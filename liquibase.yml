@@ -8,8 +8,8 @@ databaseChangeLog:
       preconditions:
         onFail: MARK_RAN
         not:
-          - tableExists:
-              tableName: products
+          tableExists:
+            tableName: products
       changes:
         - createTable:
             tableName: products
