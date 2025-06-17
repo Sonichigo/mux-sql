@@ -6,10 +6,10 @@ databaseChangeLog:
       labels: products-api 
       comment: Creating product table for REST API
       preconditions:
-        - onFail: MARK_RAN
-        - not:
-            - tableExists:
-                tableName: products
+        onFail: MARK_RAN
+        not:
+          - tableExists:
+              tableName: products
       changes:
         - createTable:
             tableName: products
@@ -27,12 +27,13 @@ databaseChangeLog:
               - column:
                   name: price
                   type: NUMERIC(10,2)
+                  defaultValue: 0.00
                   constraints:
                     nullable: false
-                  defaultValue: 0.00
       rollback:
         - dropTable:
             tableName: products
+
   - changeSet:
       id: product-table-indexes
       author: sonichigo
@@ -50,6 +51,7 @@ databaseChangeLog:
         - dropIndex:
             indexName: idx_product_name
             tableName: products
+
   - changeSet:
       id: product-sample-data
       author: claude
@@ -79,6 +81,7 @@ databaseChangeLog:
         - delete:
             tableName: products
             where: name in ('Sample Product 1', 'Sample Product 2')
+
   - changeSet:
       id: product-sample
       author: sonichigo
