@@ -5,6 +5,11 @@ databaseChangeLog:
       context: dev
       labels: products-api 
       comment: Creating product table for REST API
+      preconditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: products
       changes:
         - createTable:
             tableName: products
