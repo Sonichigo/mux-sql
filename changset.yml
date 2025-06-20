@@ -40,10 +40,10 @@ databaseChangeLog:
             columns:
               - column:
                   name: name
-            indexName: idx_product_name
+            indexName: idx_products_name
       rollback:
         - dropIndex:
-            indexName: idx_product_name
+            indexName: idx_products_name
             tableName: product
   - changeSet:
       id: product-sample-data-initial
