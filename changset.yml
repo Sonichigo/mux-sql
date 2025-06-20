@@ -27,7 +27,7 @@ databaseChangeLog:
                     nullable: false
       rollback:
         - dropTable:
-            tableName: products
+            tableName: product
   - changeSet:
       id: product-table-indexes-v2
       author: sonichigo
@@ -44,7 +44,7 @@ databaseChangeLog:
       rollback:
         - dropIndex:
             indexName: idx_product_name
-            tableName: products
+            tableName: product
   - changeSet:
       id: product-sample-data-initial
       author: sonichigo
@@ -62,7 +62,7 @@ databaseChangeLog:
                   name: price
                   value: 89.99
         - insert:
-            tableName: products
+            tableName: product
             columns:
               - column:
                   name: name
@@ -72,7 +72,7 @@ databaseChangeLog:
                   value: 15.99
       rollback:
         - delete:
-            tableName: products
+            tableName: product
             where: name in ('Wireless Bluetooth Headphones', 'USB-C Charging Cable')
   - changeSet:
       id: product-sample-data-electronics
@@ -91,7 +91,7 @@ databaseChangeLog:
                   name: price
                   value: 24.99
         - insert:
-            tableName: products
+            tableName: product
             columns:
               - column:
                   name: name
@@ -101,7 +101,7 @@ databaseChangeLog:
                   value: 45.00
       rollback:
         - delete:
-            tableName: products
+            tableName: product
             where: name in ('Smartphone Case', 'Portable Power Bank')
   - changeSet:
       id: product-sample-data-accessories
